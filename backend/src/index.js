@@ -14,10 +14,11 @@ const app = express();
 
 // Middleware
 app.use(cors({
-    origin: true, // Allow all origins in development
+    origin: ['https://local-suggestions-frontend.onrender.com', 'http://localhost:3000'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
+    optionsSuccessStatus: 200
 }));
 
 // Disable certain helmet middleware that might block ngrok

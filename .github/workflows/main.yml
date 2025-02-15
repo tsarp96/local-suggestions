@@ -49,6 +49,13 @@ jobs:
       run: |
         npm run lint || true  # Don't fail the build for linting errors initially
 
+    # Install Docker Compose
+    - name: Install Docker Compose
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y docker-compose-plugin
+        docker compose version
+
     # Build Docker images
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
@@ -71,9 +78,9 @@ jobs:
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
-    # Test Docker Compose
+    # Test Docker Compose Build
     - name: Test Docker Compose Build
-      run: docker-compose build
+      run: docker compose build
 
   deploy:
     needs: build-and-test

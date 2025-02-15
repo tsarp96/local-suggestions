@@ -21,6 +21,10 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: 6
   },
+  isAdmin: {
+    type: Boolean,
+    default: false
+  },
   favorites: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Suggestion'

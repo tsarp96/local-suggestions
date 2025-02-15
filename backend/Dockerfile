@@ -12,8 +12,8 @@ COPY package*.json ./
 # Debug: Show copied files
 RUN ls -la
 
-# Install dependencies
-RUN npm ci
+# Install dependencies with production flags
+RUN npm install --production --no-optional --prefer-offline
 
 # Copy the rest of the application
 COPY . .

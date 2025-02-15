@@ -3,8 +3,9 @@ services:
   - type: web
     name: local-suggestions-api
     env: docker
-    dockerfilePath: backend/Dockerfile
-    buildCommand: docker build -t local-suggestions-backend -f backend/Dockerfile backend
+    rootDirectory: backend
+    dockerfilePath: Dockerfile
+    buildCommand: docker build -t local-suggestions-backend .
     startCommand: docker run -p $PORT:5000 local-suggestions-backend
     envVars:
       - key: NODE_ENV
@@ -19,8 +20,9 @@ services:
   - type: web
     name: local-suggestions-frontend
     env: docker
-    dockerfilePath: frontend/Dockerfile
-    buildCommand: docker build -t local-suggestions-frontend -f frontend/Dockerfile frontend
+    rootDirectory: frontend
+    dockerfilePath: Dockerfile
+    buildCommand: docker build -t local-suggestions-frontend .
     startCommand: docker run -p $PORT:3000 local-suggestions-frontend
     envVars:
       - key: NODE_ENV

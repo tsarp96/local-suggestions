@@ -4,14 +4,23 @@ services:
     name: local-suggestions-api
     env: docker
     rootDirectory: backend
-    dockerfilePath: Dockerfile
+    dockerfilePath: ./Dockerfile
     buildCommand: |
       echo "=== Current working directory ==="
       pwd
       echo "=== Directory contents ==="
       ls -la
+      echo "=== Parent directory contents ==="
+      ls -la ..
       echo "=== Verifying package.json ==="
-      cat package.json
+      if [ -f "package.json" ]; then
+        echo "package.json exists in current directory"
+        cat package.json
+      else
+        echo "package.json not found in current directory!"
+        echo "Searching for package.json:"
+        find .. -name package.json
+      fi
       echo "=== Building Docker image ==="
       docker build --no-cache -t backend .
     startCommand: docker run -p $PORT:5000 backend
@@ -29,7 +38,7 @@ services:
     name: local-suggestions-frontend
     env: docker
     rootDirectory: frontend
-    dockerfilePath: Dockerfile
+    dockerfilePath: ./Dockerfile
     buildCommand: |
       echo "=== Current working directory ==="
       pwd

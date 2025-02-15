@@ -58,6 +58,9 @@ const suggestionSlice = createSlice({
     setSelectedSuggestion: (state, action: PayloadAction<Suggestion | null>) => {
       state.selectedSuggestion = action.payload;
     },
+    clearSuggestions: (state) => {
+      state.suggestions = [];
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -88,5 +91,5 @@ const suggestionSlice = createSlice({
   },
 });
 
-export const { setSelectedSuggestion } = suggestionSlice.actions;
+export const { setSelectedSuggestion, clearSuggestions } = suggestionSlice.actions;
 export default suggestionSlice.reducer; 

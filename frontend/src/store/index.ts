@@ -2,12 +2,14 @@ import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './slices/authSlice';
 import suggestionReducer from './slices/suggestionSlice';
 import categoryReducer from './slices/categorySlice';
-import { AuthState, SuggestionState, CategoryState } from '../types';
+import locationReducer from './slices/locationSlice';
+import { AuthState, SuggestionState, CategoryState, LocationState } from '../types';
 
 export interface RootState {
   auth: AuthState;
   suggestions: SuggestionState;
   categories: CategoryState;
+  locations: LocationState;
 }
 
 export const store = configureStore({
@@ -15,6 +17,7 @@ export const store = configureStore({
     auth: authReducer,
     suggestions: suggestionReducer,
     categories: categoryReducer,
+    locations: locationReducer,
   },
 });
 

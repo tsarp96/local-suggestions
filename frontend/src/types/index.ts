@@ -1,3 +1,35 @@
+export interface District {
+  _id: string;
+  name: string;
+}
+
+export interface City {
+  _id: string;
+  name: string;
+  districts: District[];
+}
+
+export interface LocationState {
+  cities: City[];
+  selectedCity: City | null;
+  selectedDistrict: District | null;
+  isLoading: boolean;
+  error: string | null;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+  description?: string;
+  icon?: string;
+}
+
+export interface CategoryState {
+  categories: Category[];
+  isLoading: boolean;
+  error: string | null;
+}
+
 export interface User {
   id: string;
   username: string;
@@ -6,11 +38,11 @@ export interface User {
   location?: string;
 }
 
-export interface Category {
-  id: string;
-  name: string;
-  description?: string;
-  icon?: string;
+export interface AuthState {
+  user: User | null;
+  token: string | null;
+  isLoading: boolean;
+  error: string | null;
 }
 
 export interface Suggestion {
@@ -35,22 +67,9 @@ export interface Suggestion {
   updatedAt: string;
 }
 
-export interface AuthState {
-  user: User | null;
-  token: string | null;
-  isLoading: boolean;
-  error: string | null;
-}
-
 export interface SuggestionState {
   suggestions: Suggestion[];
   selectedSuggestion: Suggestion | null;
-  isLoading: boolean;
-  error: string | null;
-}
-
-export interface CategoryState {
-  categories: Category[];
   isLoading: boolean;
   error: string | null;
 } 

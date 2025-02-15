@@ -7,8 +7,13 @@ import {
   Badge,
   IconButton,
   useToast,
+  HStack,
+  Tag,
+  TagLeftIcon,
+  TagLabel,
+  VStack,
 } from '@chakra-ui/react';
-import { FaThumbsUp, FaThumbsDown } from 'react-icons/fa';
+import { FaThumbsUp, FaThumbsDown, FaMapMarkerAlt, FaUser } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { voteSuggestion } from '../store/slices/suggestionSlice';
 import { Suggestion } from '../types';
@@ -48,6 +53,9 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({ suggestion }) => {
     }
   };
 
+  // Split location into city and district
+  const [city, district] = suggestion.location.split(' - ');
+
   const isLiked = user && suggestion.votes.likes.includes(user.id);
   const isUnliked = user && suggestion.votes.unlikes.includes(user.id);
   const voteCount = suggestion.votes.likes.length - suggestion.votes.unlikes.length;
@@ -55,48 +63,84 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({ suggestion }) => {
   return (
     <Box
       borderWidth={1}
-      borderRadius="lg"
+      borderRadius="xl"
       overflow="hidden"
-      p={4}
-      boxShadow="sm"
       bg="white"
+      h="500px"
+      position="relative"
+      boxShadow="xl"
     >
-      <Flex justify="space-between" align="start" mb={2}>
-        <Heading size="md">{suggestion.title}</Heading>
-        <Badge colorScheme="teal">{suggestion.category.name}</Badge>
-      </Flex>
+      {/* Card Content */}
+      <VStack h="100%" spacing={0}>
+        {/* Header Section */}
+        <Box w="100%" p={4} bg="white">
+          <Flex justify="space-between" align="center" mb={2}>
+            <Heading size="md" noOfLines={2}>{suggestion.title}</Heading>
+            <Badge colorScheme="teal" fontSize="sm" px={2} py={1} borderRadius="full">
+              {suggestion.category.name}
+            </Badge>
+          </Flex>
+        </Box>
 
-      <Text mb={4} color="gray.600">
-        {suggestion.description}
-      </Text>
+        {/* Main Content Section */}
+        <Box flex={1} w="100%" p={4} bg="gray.50">
+          <Text color="gray.700" fontSize="md" mb={4}>
+            {suggestion.description}
+          </Text>
 
-      <Text fontSize="sm" color="gray.500" mb={2}>
-        Location: {suggestion.location}
-      </Text>
+          <HStack spacing={2} mb={4}>
+            <Tag size="md" variant="subtle" colorScheme="cyan">
+              <TagLeftIcon as={FaMapMarkerAlt} />
+              <TagLabel fontWeight="medium">{city}</TagLabel>
+            </Tag>
+            {district && (
+              <Tag size="md" variant="subtle" colorScheme="blue">
+                <TagLabel>{district}</TagLabel>
+              </Tag>
+            )}
+          </HStack>
 
-      <Text fontSize="sm" color="gray.500" mb={4}>
-        Posted by: {suggestion.author.username}
-      </Text>
+          <Flex align="center" gap={2}>
+            <Tag size="sm" variant="subtle" colorScheme="gray">
+              <TagLeftIcon boxSize="3" as={FaUser} />
+              <TagLabel fontSize="sm">{suggestion.author.username}</TagLabel>
+            </Tag>
+          </Flex>
+        </Box>
 
-      <Flex justify="space-between" align="center">
-        <Flex align="center" gap={2}>
-          <IconButton
-            aria-label="Like"
-            icon={<FaThumbsUp />}
-            colorScheme={isLiked ? 'teal' : 'gray'}
-            variant={isLiked ? 'solid' : 'outline'}
-            onClick={() => handleVote('like')}
-          />
-          <Text>{voteCount}</Text>
-          <IconButton
-            aria-label="Unlike"
-            icon={<FaThumbsDown />}
-            colorScheme={isUnliked ? 'red' : 'gray'}
-            variant={isUnliked ? 'solid' : 'outline'}
-            onClick={() => handleVote('unlike')}
-          />
-        </Flex>
-      </Flex>
+        {/* Footer Section */}
+        <Box w="100%" p={4} bg="white" borderTop="1px" borderColor="gray.100">
+          <Flex justify="center" align="center" gap={4}>
+            <IconButton
+              aria-label="Unlike"
+              icon={<FaThumbsDown />}
+              colorScheme={isUnliked ? 'red' : 'gray'}
+              variant={isUnliked ? 'solid' : 'outline'}
+              size="lg"
+              isRound
+              onClick={() => handleVote('unlike')}
+            />
+            <Text 
+              fontSize="xl" 
+              fontWeight="bold" 
+              color={voteCount > 0 ? 'teal.500' : voteCount < 0 ? 'red.500' : 'gray.500'}
+              minW="40px"
+              textAlign="center"
+            >
+              {voteCount}
+            </Text>
+            <IconButton
+              aria-label="Like"
+              icon={<FaThumbsUp />}
+              colorScheme={isLiked ? 'teal' : 'gray'}
+              variant={isLiked ? 'solid' : 'outline'}
+              size="lg"
+              isRound
+              onClick={() => handleVote('like')}
+            />
+          </Flex>
+        </Box>
+      </VStack>
     </Box>
   );
 };

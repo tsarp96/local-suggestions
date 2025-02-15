@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { createSuggestion } from '../store/slices/suggestionSlice';
 import { fetchCategories } from '../store/slices/categorySlice';
+import { fetchCities, fetchDistricts, setSelectedCity, setSelectedDistrict } from '../store/slices/locationSlice';
 import { AppDispatch, RootState } from '../store';
 import { Category } from '../types';
 
@@ -29,20 +30,36 @@ const CreateSuggestion: React.FC = () => {
   const toast = useToast();
   
   const { categories } = useSelector((state: RootState) => state.categories);
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { cities, selectedCity, selectedDistrict } = useSelector((state: RootState) => state.locations);
   const { isLoading } = useSelector((state: RootState) => state.suggestions);
 
   useEffect(() => {
     dispatch(fetchCategories());
+    dispatch(fetchCities());
   }, [dispatch]);
+
+  const handleCityChange = async (cityId: string) => {
+    const city = cities.find(c => c._id === cityId);
+    if (city) {
+      dispatch(setSelectedCity(city));
+      dispatch(fetchDistricts(cityId));
+    }
+  };
+
+  const handleDistrictChange = (districtId: string) => {
+    const district = selectedCity?.districts.find(d => d._id === districtId);
+    if (district) {
+      dispatch(setSelectedDistrict(district));
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!user?.location) {
+    if (!selectedCity || !selectedDistrict) {
       toast({
         title: 'Error',
-        description: 'Please select a location first',
+        description: 'Please select both city and district',
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -67,7 +84,7 @@ const CreateSuggestion: React.FC = () => {
         title,
         description,
         category: selectedCategory,
-        location: user.location,
+        location: `${selectedCity.name} - ${selectedDistrict.name}`,
         coordinates: {
           type: 'Point',
           coordinates,
@@ -116,6 +133,36 @@ const CreateSuggestion: React.FC = () => {
             placeholder="Enter description"
             rows={4}
           />
+        </FormControl>
+
+        <FormControl isRequired>
+          <FormLabel>City</FormLabel>
+          <Select
+            value={selectedCity?._id || ''}
+            onChange={(e) => handleCityChange(e.target.value)}
+            placeholder="Select city"
+          >
+            {cities.map((city) => (
+              <option key={city._id} value={city._id}>
+                {city.name}
+              </option>
+            ))}
+          </Select>
+        </FormControl>
+
+        <FormControl isRequired isDisabled={!selectedCity}>
+          <FormLabel>District</FormLabel>
+          <Select
+            value={selectedDistrict?._id || ''}
+            onChange={(e) => handleDistrictChange(e.target.value)}
+            placeholder="Select district"
+          >
+            {selectedCity?.districts.map((district) => (
+              <option key={district._id} value={district._id}>
+                {district.name}
+              </option>
+            ))}
+          </Select>
         </FormControl>
 
         <FormControl isRequired>

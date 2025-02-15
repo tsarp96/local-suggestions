@@ -9,11 +9,12 @@ WORKDIR /app
 # Show working directory
 RUN echo "Working directory:" && pwd && ls -la
 
-# Copy package files
-COPY package*.json ./
+# Copy package files explicitly
+COPY package.json package-lock.json ./
 
 # Verify package files
 RUN echo "After copying package files:" && ls -la
+RUN cat package.json
 
 # Install dependencies
 RUN npm install --production

@@ -9,9 +9,8 @@ WORKDIR /app
 # Show working directory
 RUN echo "Working directory:" && pwd && ls -la
 
-# Copy package files first
-COPY package.json ./
-COPY package-lock.json ./
+# Copy package files
+COPY package*.json ./
 
 # Verify package files
 RUN echo "After copying package files:" && ls -la

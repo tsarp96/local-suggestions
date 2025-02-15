@@ -68,7 +68,7 @@ const CreateSuggestion: React.FC = () => {
     }
 
     try {
-      const selectedCategory = categories.find(c => c.id === categoryId);
+      const selectedCategory = categories.find(c => c._id === categoryId);
       if (!selectedCategory) {
         toast({
           title: 'Error',
@@ -80,16 +80,20 @@ const CreateSuggestion: React.FC = () => {
         return;
       }
 
-      await dispatch(createSuggestion({
+      const suggestionData = {
         title,
         description,
-        category: selectedCategory,
+        category: selectedCategory._id,
         location: `${selectedCity.name} - ${selectedDistrict.name}`,
         coordinates: {
-          type: 'Point',
+          type: "Point" as const,
           coordinates,
         },
-      })).unwrap();
+      };
+      
+      console.log('Creating suggestion with data:', suggestionData);
+      
+      await dispatch(createSuggestion(suggestionData)).unwrap();
       
       toast({
         title: 'Success',
@@ -173,7 +177,7 @@ const CreateSuggestion: React.FC = () => {
             placeholder="Select category"
           >
             {categories.map((category: Category) => (
-              <option key={category.id} value={category.id}>
+              <option key={category._id} value={category._id}>
                 {category.name}
               </option>
             ))}

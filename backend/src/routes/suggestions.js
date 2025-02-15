@@ -91,6 +91,11 @@ router.post('/:id/vote',
       }
 
       await suggestion.save();
+      
+      // Populate author and category before sending response
+      await suggestion.populate('author', 'username');
+      await suggestion.populate('category', 'name');
+      
       res.json(suggestion);
     } catch (error) {
       res.status(500).json({ message: 'Server error' });

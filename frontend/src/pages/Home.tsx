@@ -6,12 +6,13 @@ import {
   Heading,
   Text,
   Flex,
-  HStack,
-  FormControl,
-  FormLabel,
   Center,
   VStack,
+  Icon,
+  InputGroup,
+  InputLeftElement,
 } from '@chakra-ui/react';
+import { FaMapMarkerAlt, FaBuilding, FaTags } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchSuggestions } from '../store/slices/suggestionSlice';
 import { fetchCategories } from '../store/slices/categorySlice';
@@ -87,54 +88,95 @@ const Home: React.FC = () => {
 
   return (
     <Container maxW="container.xl" py={8}>
-      <VStack spacing={8}>
-        <Heading size="lg">Local Suggestions</Heading>
-        
-        <HStack spacing={4} wrap="wrap">
-          <FormControl maxW="200px">
-            <FormLabel>City</FormLabel>
-            <Select
-              value={selectedCity?._id || ''}
-              onChange={(e) => handleCityChange(e.target.value)}
-              placeholder="All Cities"
+      <VStack spacing={8} align="stretch">
+        <Box 
+          bg="white" 
+          p={6} 
+          borderRadius="xl" 
+          boxShadow="sm"
+          borderWidth="1px"
+          borderColor="gray.100"
+        >
+          <VStack spacing={6} align="stretch">
+            <Heading size="lg" color="gray.800" textAlign="center">Local Suggestions</Heading>
+            
+            <Flex 
+              gap={4} 
+              direction={{ base: "column", md: "row" }}
+              justify="center"
+              align="stretch"
             >
-              {cities.map((city: City) => (
-                <option key={city._id} value={city._id}>
-                  {city.name}
-                </option>
-              ))}
-            </Select>
-          </FormControl>
+              <InputGroup>
+                <InputLeftElement pointerEvents="none">
+                  <Icon as={FaMapMarkerAlt} color="teal.500" />
+                </InputLeftElement>
+                <Select
+                  pl={10}
+                  value={selectedCity?._id || ''}
+                  onChange={(e) => handleCityChange(e.target.value)}
+                  placeholder="Select City"
+                  bg="white"
+                  borderColor="gray.300"
+                  _hover={{ borderColor: 'teal.500' }}
+                  _focus={{ borderColor: 'teal.500', boxShadow: '0 0 0 1px var(--chakra-colors-teal-500)' }}
+                  cursor="pointer"
+                >
+                  {cities.map((city: City) => (
+                    <option key={city._id} value={city._id}>
+                      {city.name}
+                    </option>
+                  ))}
+                </Select>
+              </InputGroup>
 
-          <FormControl maxW="200px" isDisabled={!selectedCity}>
-            <FormLabel>District</FormLabel>
-            <Select
-              value={selectedDistrict?._id || ''}
-              onChange={(e) => handleDistrictChange(e.target.value)}
-              placeholder="All Districts"
-            >
-              {selectedCity?.districts.map((district: District) => (
-                <option key={district._id} value={district._id}>
-                  {district.name}
-                </option>
-              ))}
-            </Select>
-          </FormControl>
+              <InputGroup>
+                <InputLeftElement pointerEvents="none">
+                  <Icon as={FaBuilding} color="teal.500" />
+                </InputLeftElement>
+                <Select
+                  pl={10}
+                  value={selectedDistrict?._id || ''}
+                  onChange={(e) => handleDistrictChange(e.target.value)}
+                  placeholder="Select District"
+                  isDisabled={!selectedCity}
+                  bg="white"
+                  borderColor="gray.300"
+                  _hover={{ borderColor: 'teal.500' }}
+                  _focus={{ borderColor: 'teal.500', boxShadow: '0 0 0 1px var(--chakra-colors-teal-500)' }}
+                  cursor={selectedCity ? "pointer" : "not-allowed"}
+                >
+                  {selectedCity?.districts.map((district: District) => (
+                    <option key={district._id} value={district._id}>
+                      {district.name}
+                    </option>
+                  ))}
+                </Select>
+              </InputGroup>
 
-          <FormControl maxW="200px">
-            <FormLabel>Category</FormLabel>
-            <Select
-              placeholder="All Categories"
-              onChange={(e) => handleCategoryFilter(e.target.value)}
-            >
-              {categories.map((category: Category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
-            </Select>
-          </FormControl>
-        </HStack>
+              <InputGroup>
+                <InputLeftElement pointerEvents="none">
+                  <Icon as={FaTags} color="teal.500" />
+                </InputLeftElement>
+                <Select
+                  pl={10}
+                  placeholder="Select Category"
+                  onChange={(e) => handleCategoryFilter(e.target.value)}
+                  bg="white"
+                  borderColor="gray.300"
+                  _hover={{ borderColor: 'teal.500' }}
+                  _focus={{ borderColor: 'teal.500', boxShadow: '0 0 0 1px var(--chakra-colors-teal-500)' }}
+                  cursor="pointer"
+                >
+                  {categories.map((category: Category) => (
+                    <option key={category._id} value={category._id}>
+                      {category.name}
+                    </option>
+                  ))}
+                </Select>
+              </InputGroup>
+            </Flex>
+          </VStack>
+        </Box>
 
         {isLoading ? (
           <Center h="60vh">
@@ -148,7 +190,7 @@ const Home: React.FC = () => {
           <Box h="60vh" w="100%" maxW="600px" mx="auto" position="relative">
             {suggestions.map((suggestion, index) => (
               <Box
-                key={suggestion.id}
+                key={suggestion._id}
                 position={index === 0 ? "relative" : "absolute"}
                 top="0"
                 left="0"

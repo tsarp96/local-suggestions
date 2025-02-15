@@ -41,7 +41,19 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({ suggestion }) => {
     }
 
     try {
-      await dispatch(voteSuggestion({ id: suggestion.id, type })).unwrap();
+      console.log('Before vote:', {
+        likes: suggestion.votes.likes.length,
+        unlikes: suggestion.votes.unlikes.length,
+        total: suggestion.votes.likes.length - suggestion.votes.unlikes.length
+      });
+      
+      const result = await dispatch(voteSuggestion({ id: suggestion._id, type })).unwrap();
+      
+      console.log('After vote:', {
+        likes: result.votes.likes.length,
+        unlikes: result.votes.unlikes.length,
+        total: result.votes.likes.length - result.votes.unlikes.length
+      });
     } catch (error) {
       toast({
         title: 'Error',
@@ -56,88 +68,123 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({ suggestion }) => {
   // Split location into city and district
   const [city, district] = suggestion.location.split(' - ');
 
-  const isLiked = user && suggestion.votes.likes.includes(user.id);
-  const isUnliked = user && suggestion.votes.unlikes.includes(user.id);
+  const isLiked = user && suggestion.votes.likes.includes(user._id);
+  const isUnliked = user && suggestion.votes.unlikes.includes(user._id);
   const voteCount = suggestion.votes.likes.length - suggestion.votes.unlikes.length;
 
   return (
     <Box
       borderWidth={1}
-      borderRadius="xl"
+      borderRadius="lg"
       overflow="hidden"
       bg="white"
-      h="500px"
+      minH={{ base: "400px", md: "500px" }}
       position="relative"
-      boxShadow="xl"
+      boxShadow="md"
+      mx={{ base: 2, md: 0 }}
     >
-      {/* Card Content */}
       <VStack h="100%" spacing={0}>
         {/* Header Section */}
-        <Box w="100%" p={4} bg="white">
-          <Flex justify="space-between" align="center" mb={2}>
+        <Box w="100%" p={{ base: 3, md: 4 }} bg="white">
+          <Flex 
+            direction={{ base: "column", sm: "row" }} 
+            justify="space-between" 
+            align={{ base: "start", sm: "center" }} 
+            gap={2}
+          >
             <Heading size="md" noOfLines={2}>{suggestion.title}</Heading>
-            <Badge colorScheme="teal" fontSize="sm" px={2} py={1} borderRadius="full">
-              {suggestion.category.name}
+            <Badge 
+              colorScheme="teal" 
+              fontSize="sm" 
+              px={2} 
+              py={1} 
+              borderRadius="full"
+              alignSelf={{ base: "flex-start", sm: "center" }}
+            >
+              {typeof suggestion.category === 'string' ? suggestion.category : suggestion.category.name}
             </Badge>
           </Flex>
         </Box>
 
         {/* Main Content Section */}
-        <Box flex={1} w="100%" p={4} bg="gray.50">
-          <Text color="gray.700" fontSize="md" mb={4}>
+        <Box flex={1} w="100%" p={{ base: 3, md: 4 }} bg="gray.50">
+          <Text 
+            color="gray.700" 
+            fontSize={{ base: "sm", md: "md" }} 
+            mb={4}
+            noOfLines={{ base: 4, md: 6 }}
+          >
             {suggestion.description}
           </Text>
 
-          <HStack spacing={2} mb={4}>
-            <Tag size="md" variant="subtle" colorScheme="cyan">
-              <TagLeftIcon as={FaMapMarkerAlt} />
-              <TagLabel fontWeight="medium">{city}</TagLabel>
-            </Tag>
-            {district && (
-              <Tag size="md" variant="subtle" colorScheme="blue">
-                <TagLabel>{district}</TagLabel>
+          <VStack spacing={3} align="flex-start">
+            <HStack spacing={2} flexWrap="wrap">
+              <Tag size={{ base: "sm", md: "md" }} variant="subtle" colorScheme="cyan">
+                <TagLeftIcon as={FaMapMarkerAlt} />
+                <TagLabel fontWeight="medium">{city}</TagLabel>
               </Tag>
-            )}
-          </HStack>
+              {district && (
+                <Tag size={{ base: "sm", md: "md" }} variant="subtle" colorScheme="blue">
+                  <TagLabel>{district}</TagLabel>
+                </Tag>
+              )}
+            </HStack>
 
-          <Flex align="center" gap={2}>
             <Tag size="sm" variant="subtle" colorScheme="gray">
               <TagLeftIcon boxSize="3" as={FaUser} />
               <TagLabel fontSize="sm">{suggestion.author.username}</TagLabel>
             </Tag>
-          </Flex>
+          </VStack>
         </Box>
 
         {/* Footer Section */}
-        <Box w="100%" p={4} bg="white" borderTop="1px" borderColor="gray.100">
-          <Flex justify="center" align="center" gap={4}>
-            <IconButton
-              aria-label="Unlike"
-              icon={<FaThumbsDown />}
-              colorScheme={isUnliked ? 'red' : 'gray'}
-              variant={isUnliked ? 'solid' : 'outline'}
-              size="lg"
-              isRound
-              onClick={() => handleVote('unlike')}
-            />
-            <Text 
-              fontSize="xl" 
-              fontWeight="bold" 
-              color={voteCount > 0 ? 'teal.500' : voteCount < 0 ? 'red.500' : 'gray.500'}
-              minW="40px"
-              textAlign="center"
-            >
-              {voteCount}
-            </Text>
-            <IconButton
-              aria-label="Like"
-              icon={<FaThumbsUp />}
-              colorScheme={isLiked ? 'teal' : 'gray'}
-              variant={isLiked ? 'solid' : 'outline'}
-              size="lg"
-              isRound
-              onClick={() => handleVote('like')}
-            />
+        <Box 
+          w="100%" 
+          p={{ base: 3, md: 4 }} 
+          bg="white" 
+          borderTop="1px" 
+          borderColor="gray.100"
+        >
+          <Flex justify="center" align="center" gap={{ base: 8, md: 12 }}>
+            <Flex direction="column" align="center">
+              <IconButton
+                aria-label="Unlike"
+                icon={<FaThumbsDown />}
+                colorScheme={isUnliked ? 'red' : 'gray'}
+                variant={isUnliked ? 'solid' : 'outline'}
+                size={{ base: "md", md: "lg" }}
+                isRound
+                onClick={() => handleVote('unlike')}
+              />
+              <Text 
+                fontSize={{ base: "sm", md: "md" }}
+                fontWeight="bold" 
+                color="red.500"
+                mt={2}
+              >
+                {suggestion.votes.unlikes.length}
+              </Text>
+            </Flex>
+
+            <Flex direction="column" align="center">
+              <IconButton
+                aria-label="Like"
+                icon={<FaThumbsUp />}
+                colorScheme={isLiked ? 'teal' : 'gray'}
+                variant={isLiked ? 'solid' : 'outline'}
+                size={{ base: "md", md: "lg" }}
+                isRound
+                onClick={() => handleVote('like')}
+              />
+              <Text 
+                fontSize={{ base: "sm", md: "md" }}
+                fontWeight="bold" 
+                color="teal.500"
+                mt={2}
+              >
+                {suggestion.votes.likes.length}
+              </Text>
+            </Flex>
           </Flex>
         </Box>
       </VStack>

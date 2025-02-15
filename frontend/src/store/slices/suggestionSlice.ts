@@ -80,11 +80,11 @@ const suggestionSlice = createSlice({
         state.suggestions.unshift(action.payload);
       })
       .addCase(voteSuggestion.fulfilled, (state, action) => {
-        const index = state.suggestions.findIndex(s => s.id === action.payload.id);
+        const index = state.suggestions.findIndex(s => s._id === action.payload._id);
         if (index !== -1) {
           state.suggestions[index] = action.payload;
         }
-        if (state.selectedSuggestion?.id === action.payload.id) {
+        if (state.selectedSuggestion?._id === action.payload._id) {
           state.selectedSuggestion = action.payload;
         }
       });

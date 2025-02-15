@@ -18,7 +18,7 @@ export interface LocationState {
 }
 
 export interface Category {
-  id: string;
+  _id: string;
   name: string;
   description?: string;
   icon?: string;
@@ -31,7 +31,7 @@ export interface CategoryState {
 }
 
 export interface User {
-  id: string;
+  _id: string;
   username: string;
   email: string;
   favorites: string[];
@@ -46,13 +46,13 @@ export interface AuthState {
 }
 
 export interface Suggestion {
-  id: string;
+  _id: string;
   title: string;
   description: string;
   location: string;
-  category: Category;
+  category: Category | string;
   author: {
-    id: string;
+    _id: string;
     username: string;
   };
   votes: {

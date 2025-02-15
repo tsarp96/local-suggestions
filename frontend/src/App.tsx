@@ -1,40 +1,48 @@
 import React from 'react';
-import { ChakraProvider, CSSReset } from '@chakra-ui/react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ChakraProvider } from '@chakra-ui/react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from './store';
+import { useSelector } from 'react-redux';
+import { RootState } from './store';
 
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import CreateSuggestion from './pages/CreateSuggestion';
-import PrivateRoute from './components/PrivateRoute';
+import LandingPage from './pages/LandingPage';
 
-function App() {
+const App = () => {
+  const { user } = useSelector((state: RootState) => state.auth);
+
   return (
     <Provider store={store}>
       <ChakraProvider>
-        <CSSReset />
         <Router>
           <Navbar />
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route
-              path="/create-suggestion"
-              element={
-                <PrivateRoute>
-                  <CreateSuggestion />
-                </PrivateRoute>
-              }
+            <Route 
+              path="/" 
+              element={user ? <Home /> : <LandingPage />} 
+            />
+            <Route 
+              path="/login" 
+              element={user ? <Navigate to="/" /> : <Login />} 
+            />
+            <Route 
+              path="/register" 
+              element={user ? <Navigate to="/" /> : <Register />} 
+            />
+            <Route 
+              path="/create-suggestion" 
+              element={user ? <CreateSuggestion /> : <Navigate to="/login" />} 
             />
           </Routes>
         </Router>
       </ChakraProvider>
     </Provider>
   );
-}
+};
 
 export default App;

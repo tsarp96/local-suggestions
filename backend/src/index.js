@@ -40,14 +40,27 @@ app.get('/api/health', (req, res) => {
 });
 
 // MongoDB connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://tsarp96:yfTU2NGZxAF1D2Qf@cluster0.swpbh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI) {
+    console.error('MONGODB_URI environment variable is not set!');
+    process.exit(1);
+}
 
 mongoose.connect(MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    retryWrites: true,
+    w: 'majority',
 })
-    .then(() => console.log('Connected to MongoDB'))
-    .catch((err) => console.error('MongoDB connection error:', err));
+.then(() => {
+    console.log('Connected to MongoDB successfully');
+})
+.catch((err) => {
+    console.error('MongoDB connection error:', err);
+    // Don't exit the process, let the application continue
+    // The health check will still work even if DB is down
+});
 
 // Error handling middleware
 app.use((err, req, res) => {

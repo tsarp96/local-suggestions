@@ -29,7 +29,14 @@ services:
       - key: NODE_ENV
         value: production
       - key: MONGODB_URI
-        value: mongodb+srv://tsarp96:yfTU2NGZxAF1D2Qf@cluster0.swpbh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+        sync: false
+        value: mongodb+srv://${MONGODB_USER}:${MONGODB_PASSWORD}@cluster0.swpbh.mongodb.net/?retryWrites=true&w=majority
+      - key: MONGODB_USER
+        sync: false
+        value: tsarp96
+      - key: MONGODB_PASSWORD
+        sync: false
+        value: yfTU2NGZxAF1D2Qf
       - key: JWT_SECRET
         generateValue: true
     healthCheckPath: /api/health

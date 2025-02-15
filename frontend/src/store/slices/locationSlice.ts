@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../../api/axios';
-import { LocationState, City, District } from '../../types';
+import { LocationState } from '../../types';
 
 const initialState: LocationState = {
   cities: [],

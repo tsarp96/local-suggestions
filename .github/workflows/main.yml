@@ -75,12 +75,20 @@ jobs:
     - name: Test Docker Compose Build
       run: docker-compose build
 
-  # Deployment job (commented out for now)
-  # deploy:
-  #   needs: build-and-test
-  #   runs-on: ubuntu-latest
-  #   if: github.ref == 'refs/heads/main'
-  #
-  #   steps:
-  #   - name: Deploy to Production
-  #     run: echo "Add deployment steps here" 
+  deploy:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Install Render CLI
+      run: curl -s https://cli.render.com/install.sh | bash
+
+    - name: Deploy to Render
+      env:
+        RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+      run: |
+        render deploy --yaml render.yaml 

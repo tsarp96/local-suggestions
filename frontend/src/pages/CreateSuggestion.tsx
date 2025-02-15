@@ -23,7 +23,7 @@ const CreateSuggestion: React.FC = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [categoryId, setCategoryId] = useState('');
-  const [coordinates, setCoordinates] = useState<[number, number]>([0, 0]);
+  const [coordinates] = useState<[number, number]>([0, 0]);
 
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();

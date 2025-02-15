@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import api from '../../api/axios';
-import { AuthState, User } from '../../types';
+import { AuthState } from '../../types';
 
 const initialState: AuthState = {
   user: null,

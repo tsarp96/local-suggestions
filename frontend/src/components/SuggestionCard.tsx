@@ -40,28 +40,12 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({ suggestion }) => {
       return;
     }
 
+    if (!suggestion._id) return;
+    
     try {
-      console.log('Before vote:', {
-        likes: suggestion.votes.likes.length,
-        unlikes: suggestion.votes.unlikes.length,
-        total: suggestion.votes.likes.length - suggestion.votes.unlikes.length
-      });
-      
-      const result = await dispatch(voteSuggestion({ id: suggestion._id, type })).unwrap();
-      
-      console.log('After vote:', {
-        likes: result.votes.likes.length,
-        unlikes: result.votes.unlikes.length,
-        total: result.votes.likes.length - result.votes.unlikes.length
-      });
+        await dispatch(voteSuggestion({ id: suggestion._id, type })).unwrap();
     } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to vote',
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
+        console.error('Failed to vote:', error);
     }
   };
 
@@ -70,7 +54,6 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({ suggestion }) => {
 
   const isLiked = user && suggestion.votes.likes.includes(user._id);
   const isUnliked = user && suggestion.votes.unlikes.includes(user._id);
-  const voteCount = suggestion.votes.likes.length - suggestion.votes.unlikes.length;
 
   return (
     <Box

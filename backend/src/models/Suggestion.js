@@ -60,6 +60,16 @@ suggestionSchema.virtual('voteCount').get(function() {
   return this.votes.likes.length - this.votes.unlikes.length;
 });
 
+// Add a named function for the pre-save middleware
+function updateVoteCount(next) {
+    if (this.votes) {
+        this.voteCount = this.votes.length;
+    }
+    next();
+}
+
+suggestionSchema.pre('save', updateVoteCount);
+
 const Suggestion = mongoose.model('Suggestion', suggestionSchema);
 
 module.exports = Suggestion; 

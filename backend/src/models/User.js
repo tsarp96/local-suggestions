@@ -33,8 +33,13 @@ const userSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Hash password before saving
-userSchema.pre('save', async function(next) {
+// Named function for password comparison
+async function comparePassword(candidatePassword) {
+  return bcrypt.compare(candidatePassword, this.password);
+}
+
+// Named function for password hashing
+async function hashPassword(next) {
   if (!this.isModified('password')) return next();
   
   try {
@@ -44,12 +49,10 @@ userSchema.pre('save', async function(next) {
   } catch (error) {
     next(error);
   }
-});
+}
 
-// Method to compare passwords
-userSchema.methods.comparePassword = async function(candidatePassword) {
-  return bcrypt.compare(candidatePassword, this.password);
-};
+userSchema.methods.comparePassword = comparePassword;
+userSchema.pre('save', hashPassword);
 
 const User = mongoose.model('User', userSchema);
 

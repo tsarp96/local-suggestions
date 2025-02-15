@@ -49,7 +49,7 @@ services:
       ls -la
       echo "=== Building Docker image ==="
       docker build --no-cache -t frontend .
-    startCommand: docker run -p $PORT:3000 frontend
+    startCommand: docker run -p $PORT:80 frontend
     envVars:
       - key: NODE_ENV
         value: production

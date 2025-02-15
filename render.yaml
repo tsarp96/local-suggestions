@@ -10,7 +10,9 @@ services:
       - key: NODE_ENV
         value: production
       - key: MONGODB_URI
-        sync: false # This will be set manually in Render dashboard
+        value: mongodb+srv://tsarp96:yfTU2NGZxAF1D2Qf@cluster0.swpbh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      - key: JWT_SECRET
+        generateValue: true
     healthCheckPath: /api/health
     
   # Frontend service

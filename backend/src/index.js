@@ -40,7 +40,9 @@ app.get('/api/health', (req, res) => {
 });
 
 // MongoDB connection
-mongoose.connect('mongodb://root:example@mongodb:27017/local-suggestions?authSource=admin', {
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://tsarp96:yfTU2NGZxAF1D2Qf@cluster0.swpbh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+
+mongoose.connect(MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 })

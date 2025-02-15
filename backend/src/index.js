@@ -47,20 +47,26 @@ if (!MONGODB_URI) {
     process.exit(1);
 }
 
+console.log('Attempting to connect to MongoDB...');
+console.log('Connection string:', MONGODB_URI.replace(/:[^:@]+@/, ':****@')); // Hide password in logs
+
 mongoose.connect(MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    retryWrites: true,
-    w: 'majority',
-    authSource: 'admin',
-    serverSelectionTimeoutMS: 5000,
-    socketTimeoutMS: 45000,
 })
 .then(() => {
     console.log('Connected to MongoDB successfully');
+    // Log database information
+    const db = mongoose.connection.db;
+    console.log('Connected to database:', db.databaseName);
 })
 .catch((err) => {
-    console.error('MongoDB connection error:', err);
+    console.error('MongoDB connection error details:', {
+        name: err.name,
+        message: err.message,
+        code: err.code,
+        codeName: err.codeName
+    });
     // Don't exit the process, let the application continue
     // The health check will still work even if DB is down
 });

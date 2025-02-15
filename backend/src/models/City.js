@@ -15,6 +15,5 @@ const citySchema = new mongoose.Schema({
     timestamps: true
 });
 
-const City = mongoose.model('City', citySchema);
-
-module.exports = City; 
+// Check if model exists before defining
+module.exports = mongoose.models.City || mongoose.model('City', citySchema); 

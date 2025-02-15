@@ -18,6 +18,5 @@ const districtSchema = new mongoose.Schema({
 // Compound index to ensure unique district names within a city
 districtSchema.index({ name: 1, city: 1 }, { unique: true });
 
-const District = mongoose.model('District', districtSchema);
-
-module.exports = District; 
+// Check if model exists before defining
+module.exports = mongoose.models.District || mongoose.model('District', districtSchema); 

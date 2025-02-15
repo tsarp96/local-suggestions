@@ -21,9 +21,10 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: 6
   },
-  isAdmin: {
-    type: Boolean,
-    default: false
+  role: {
+    type: String,
+    enum: ['USER', 'ADMIN'],
+    default: 'USER'
   },
   favorites: [{
     type: mongoose.Schema.Types.ObjectId,

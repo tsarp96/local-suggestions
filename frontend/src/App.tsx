@@ -3,8 +3,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from './store';
-import { useSelector } from 'react-redux';
-import { RootState } from './store';
+import { useAuth } from './hooks/useAuth';
 
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
@@ -12,9 +11,10 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import CreateSuggestion from './pages/CreateSuggestion';
 import LandingPage from './pages/LandingPage';
+import AdminDashboard from './pages/AdminDashboard';
 
 const App = () => {
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { user, isAdmin } = useAuth();
 
   return (
     <Provider store={store}>
@@ -37,6 +37,10 @@ const App = () => {
             <Route 
               path="/create-suggestion" 
               element={user ? <CreateSuggestion /> : <Navigate to="/login" />} 
+            />
+            <Route 
+              path="/admin" 
+              element={isAdmin ? <AdminDashboard /> : <Navigate to="/" />} 
             />
           </Routes>
         </Router>

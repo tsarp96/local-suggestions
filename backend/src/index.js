@@ -53,31 +53,21 @@ console.log('Connection string:', MONGODB_URI.replace(/:[^:@]+@/, ':****@')); //
 mongoose.connect(MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    authMechanism: 'SCRAM-SHA-1',
     retryWrites: true,
     w: 'majority',
-    serverSelectionTimeoutMS: 5000,
 })
 .then(() => {
     console.log('Connected to MongoDB successfully');
     // Log database information
     const db = mongoose.connection.db;
     console.log('Connected to database:', db.databaseName);
-    // Log connection details
-    const connectedClient = mongoose.connection.getClient();
-    console.log('Connection details:', {
-        host: connectedClient.s.url,
-        readPreference: connectedClient.s.readPreference,
-        auth: 'Authenticated successfully'
-    });
 })
 .catch((err) => {
     console.error('MongoDB connection error details:', {
         name: err.name,
         message: err.message,
         code: err.code,
-        codeName: err.codeName,
-        stack: err.stack
+        codeName: err.codeName
     });
     // Don't exit the process, let the application continue
     // The health check will still work even if DB is down

@@ -30,7 +30,7 @@ services:
         value: production
       - key: MONGODB_URI
         sync: false
-        value: mongodb+srv://tsarp96:yfTU2NGZxAF1D2Qf%40@cluster0.swpbh.mongodb.net/local-suggestions?retryWrites=true&w=majority&authMechanism=SCRAM-SHA-1
+        value: mongodb+srv://local-suggestion-db:e7NfXdQFAHw2ksQp@cluster0.swpbh.mongodb.net/local-suggestions?retryWrites=true&w=majority
       - key: JWT_SECRET
         generateValue: true
     healthCheckPath: /api/health

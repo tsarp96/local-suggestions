@@ -1,27 +1,13 @@
-FROM node:18
+FROM node:18.19.0-slim
 
-# Create and set working directory
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# Copy package files
-COPY package.json .
-COPY package-lock.json .
+COPY package*.json ./
 
-# Show contents for debugging
-RUN ls -la
+RUN npm install --production
 
-# Install dependencies
-RUN npm install
-
-# Copy the rest of the application
 COPY . .
 
-# Show final contents for debugging
-RUN ls -la
-
-# Expose the port
 EXPOSE 5000
 
-# Start the application
-CMD ["npm", "start"] 
+CMD ["node", "src/index.js"] 

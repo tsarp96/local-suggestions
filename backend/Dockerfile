@@ -3,14 +3,23 @@ FROM node:18
 # Set working directory
 WORKDIR /app
 
+# Debug: Print working directory
+RUN pwd && ls -la
+
 # Copy package files first
 COPY package*.json ./
 
-# Install dependencies with verbose logging
-RUN npm install --verbose
+# Debug: Show copied files
+RUN ls -la
+
+# Install dependencies
+RUN npm ci
 
 # Copy the rest of the application
 COPY . .
+
+# Debug: Show all files
+RUN ls -la
 
 # Expose the port
 EXPOSE 5000

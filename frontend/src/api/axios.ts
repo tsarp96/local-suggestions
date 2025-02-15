@@ -1,12 +1,12 @@
 import axios from 'axios';
 
-// Determine if we're running through ngrok
-const isNgrok = window.location.hostname.includes('ngrok-free.app');
+// Determine if we're running locally
+const isLocalhost = window.location.hostname === 'localhost';
 
 // Set the base URL accordingly
-const baseURL = isNgrok 
-  ? 'https://3976-176-88-140-170.ngrok-free.app/api'  // Use the backend ngrok URL
-  : 'http://localhost:5000/api'; // When accessed locally
+const baseURL = isLocalhost
+  ? 'http://localhost:5000/api'
+  : 'https://local-suggestions-api.onrender.com/api';
 
 const api = axios.create({
     baseURL,

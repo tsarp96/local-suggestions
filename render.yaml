@@ -4,8 +4,11 @@ services:
     name: local-suggestions-api
     env: docker
     rootDirectory: backend
-    dockerfilePath: Dockerfile
-    buildCommand: docker build --no-cache -t backend .
+    dockerfilePath: ./Dockerfile
+    buildCommand: |
+      pwd
+      ls -la
+      docker build --no-cache --progress=plain -t backend .
     startCommand: docker run --init -p $PORT:5000 backend
     envVars:
       - key: NODE_ENV
@@ -21,8 +24,11 @@ services:
     name: local-suggestions-frontend
     env: docker
     rootDirectory: frontend
-    dockerfilePath: Dockerfile
-    buildCommand: docker build --no-cache -t frontend .
+    dockerfilePath: ./Dockerfile
+    buildCommand: |
+      pwd
+      ls -la
+      docker build --no-cache --progress=plain -t frontend .
     startCommand: docker run --init -p $PORT:3000 frontend
     envVars:
       - key: NODE_ENV

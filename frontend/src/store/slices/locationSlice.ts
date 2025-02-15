@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import api from '../../api/axios';
 import { LocationState, City, District } from '../../types';
 
 const initialState: LocationState = {
@@ -13,7 +13,7 @@ const initialState: LocationState = {
 export const fetchCities = createAsyncThunk(
   'locations/fetchCities',
   async () => {
-    const response = await axios.get('http://localhost:5000/api/locations/cities');
+    const response = await api.get('/locations/cities');
     return response.data;
   }
 );
@@ -21,7 +21,7 @@ export const fetchCities = createAsyncThunk(
 export const fetchDistricts = createAsyncThunk(
   'locations/fetchDistricts',
   async (cityId: string) => {
-    const response = await axios.get(`http://localhost:5000/api/locations/cities/${cityId}/districts`);
+    const response = await api.get(`/locations/cities/${cityId}/districts`);
     return response.data;
   }
 );

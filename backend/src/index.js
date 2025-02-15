@@ -13,11 +13,18 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: '*', // Allow all origins in development
+  origin: true, // Allow all origins in development
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
 }));
-app.use(helmet());
+
+// Disable certain helmet middleware that might block ngrok
+app.use(helmet({
+  crossOriginResourcePolicy: false,
+  crossOriginOpenerPolicy: false,
+  crossOriginEmbedderPolicy: false
+}));
 app.use(express.json());
 
 // Routes
@@ -27,7 +34,7 @@ app.use('/api/categories', categoryRoutes);
 app.use('/api/locations', locationRoutes);
 
 // MongoDB connection
-mongoose.connect('mongodb://root:example@localhost:27017/local-suggestions?authSource=admin', {
+mongoose.connect('mongodb://root:example@mongodb:27017/local-suggestions?authSource=admin', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })

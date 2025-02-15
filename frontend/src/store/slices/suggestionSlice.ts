@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import axios from 'axios';
+import api from '../../api/axios';
 import { SuggestionState, Suggestion } from '../../types';
 
 const initialState: SuggestionState = {
@@ -16,37 +16,23 @@ export const fetchSuggestions = createAsyncThunk(
     if (location) params.append('location', location);
     if (category) params.append('category', category);
     
-    const response = await axios.get(`http://localhost:5000/api/suggestions?${params}`);
+    const response = await api.get(`/suggestions?${params}`);
     return response.data;
   }
 );
 
 export const createSuggestion = createAsyncThunk(
   'suggestions/createSuggestion',
-  async (suggestionData: Partial<Suggestion>, { getState }: any) => {
-    const token = getState().auth.token;
-    const response = await axios.post(
-      'http://localhost:5000/api/suggestions',
-      suggestionData,
-      {
-        headers: { Authorization: `Bearer ${token}` }
-      }
-    );
+  async (suggestionData: Partial<Suggestion>) => {
+    const response = await api.post('/suggestions', suggestionData);
     return response.data;
   }
 );
 
 export const voteSuggestion = createAsyncThunk(
   'suggestions/voteSuggestion',
-  async ({ id, type }: { id: string; type: 'like' | 'unlike' }, { getState }: any) => {
-    const token = getState().auth.token;
-    const response = await axios.post(
-      `http://localhost:5000/api/suggestions/${id}/vote`,
-      { type },
-      {
-        headers: { Authorization: `Bearer ${token}` }
-      }
-    );
+  async ({ id, type }: { id: string; type: 'like' | 'unlike' }) => {
+    const response = await api.post(`/suggestions/${id}/vote`, { type });
     return response.data;
   }
 );

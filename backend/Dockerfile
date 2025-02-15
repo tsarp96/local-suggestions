@@ -1,26 +1,20 @@
 FROM node:18.19.0-slim
 
-# Set working directory
-WORKDIR /app
+# Create app directory
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
 
-# Debug: Show current directory
-RUN pwd && ls -la
+# Copy entire context
+COPY . /usr/src/app/
 
-# First copy only package files
-COPY ["package.json", "./"]
-COPY ["package-lock.json", "./"]
-
-# Debug: Show files after package copy
-RUN pwd && ls -la
+# Show contents for debugging
+RUN ls -la
 
 # Install dependencies
-RUN npm install --production --verbose
+RUN cd /usr/src/app && npm install --production
 
-# Copy the rest of the application
-COPY . .
-
-# Debug: Show all files
-RUN pwd && ls -la
+# Show final contents
+RUN ls -la
 
 EXPOSE 5000
 

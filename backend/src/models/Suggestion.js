@@ -56,9 +56,11 @@ const suggestionSchema = new mongoose.Schema({
 suggestionSchema.index({ coordinates: '2dsphere' });
 
 // Virtual for vote count
-suggestionSchema.virtual('voteCount').get(function() {
-  return this.votes.likes.length - this.votes.unlikes.length;
-});
+function calculateVoteCount() {
+    return this.votes.likes.length - this.votes.unlikes.length;
+}
+
+suggestionSchema.virtual('voteCount').get(calculateVoteCount);
 
 // Add a named function for the pre-save middleware
 function updateVoteCount(next) {

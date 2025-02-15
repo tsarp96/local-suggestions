@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Flex, Button, Text, Link as ChakraLink } from '@chakra-ui/react';
+import { Box, Flex, Button, Text } from '@chakra-ui/react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../store';

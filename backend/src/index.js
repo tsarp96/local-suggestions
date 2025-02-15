@@ -52,6 +52,9 @@ mongoose.connect(MONGODB_URI, {
     useUnifiedTopology: true,
     retryWrites: true,
     w: 'majority',
+    authSource: 'admin',
+    serverSelectionTimeoutMS: 5000,
+    socketTimeoutMS: 45000,
 })
 .then(() => {
     console.log('Connected to MongoDB successfully');
@@ -63,9 +66,12 @@ mongoose.connect(MONGODB_URI, {
 });
 
 // Error handling middleware
-app.use((err, req, res) => {
-    console.error(err.stack);
-    res.status(500).json({ message: 'Something went wrong!' });
+app.use((err, req, res, next) => {
+    console.error('Error:', err.stack);
+    res.status(500).json({ 
+        message: 'Something went wrong!',
+        error: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
 });
 
 const PORT = process.env.PORT || 5000;

@@ -1,13 +1,16 @@
-FROM node:18-alpine
+FROM node:18
 
 # Set working directory
 WORKDIR /app
 
-# Copy the entire application
-COPY . .
+# Copy package files first
+COPY package*.json ./
 
-# Install dependencies
-RUN npm install
+# Install dependencies with verbose logging
+RUN npm install --verbose
+
+# Copy the rest of the application
+COPY . .
 
 # Expose the port
 EXPOSE 5000

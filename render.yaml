@@ -6,10 +6,14 @@ services:
     rootDirectory: backend
     dockerfilePath: Dockerfile
     buildCommand: |
-      echo "Current directory contents:"
+      echo "=== Current working directory ==="
+      pwd
+      echo "=== Directory contents ==="
       ls -la
-      echo "Building Docker image..."
-      docker build -t backend .
+      echo "=== Verifying package.json ==="
+      cat package.json
+      echo "=== Building Docker image ==="
+      docker build --no-cache -t backend .
     startCommand: docker run -p $PORT:5000 backend
     envVars:
       - key: NODE_ENV
@@ -27,10 +31,12 @@ services:
     rootDirectory: frontend
     dockerfilePath: Dockerfile
     buildCommand: |
-      echo "Current directory contents:"
+      echo "=== Current working directory ==="
+      pwd
+      echo "=== Directory contents ==="
       ls -la
-      echo "Building Docker image..."
-      docker build -t frontend .
+      echo "=== Building Docker image ==="
+      docker build --no-cache -t frontend .
     startCommand: docker run -p $PORT:3000 frontend
     envVars:
       - key: NODE_ENV

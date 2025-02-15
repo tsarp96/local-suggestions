@@ -1,21 +1,31 @@
 FROM node:18.19.0-slim
 
-# Create app directory
-RUN mkdir -p /usr/src/app
+# Show initial state
+RUN pwd && ls -la
+
+# Create and set working directory
 WORKDIR /usr/src/app
 
-# Copy entire context
-COPY . /usr/src/app/
+# Show working directory
+RUN echo "Working directory:" && pwd && ls -la
 
-# Show contents for debugging
-RUN ls -la
+# Copy package files first
+COPY package.json /usr/src/app/
+COPY package-lock.json /usr/src/app/
+
+# Verify package files
+RUN echo "After copying package files:" && ls -la
 
 # Install dependencies
-RUN cd /usr/src/app && npm install --production
+RUN npm install --production
 
-# Show final contents
-RUN ls -la
+# Copy the rest of the application
+COPY . /usr/src/app/
+
+# Verify final state
+RUN echo "Final contents:" && ls -la
 
 EXPOSE 5000
 
-CMD ["node", "src/index.js"] 
+# Start with explicit path
+CMD ["node", "/usr/src/app/src/index.js"] 

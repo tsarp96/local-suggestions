@@ -1,13 +1,19 @@
 FROM node:18-alpine
 
+# Set working directory
 WORKDIR /app
 
-COPY package*.json ./
+# Copy package files
+COPY package.json package-lock.json ./
 
-RUN npm install
+# Install dependencies
+RUN npm ci --only=production
 
+# Copy the rest of the application
 COPY . .
 
+# Expose the port
 EXPOSE 5000
 
-CMD ["npm", "run", "dev"] 
+# Start the application
+CMD ["npm", "start"] 

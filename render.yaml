@@ -5,6 +5,7 @@ services:
     env: docker
     rootDirectory: backend
     dockerfilePath: ./Dockerfile
+    buildContext: backend
     buildCommand: |
       echo "=== Current working directory ==="
       pwd
@@ -39,6 +40,7 @@ services:
     env: docker
     rootDirectory: frontend
     dockerfilePath: ./Dockerfile
+    buildContext: frontend
     buildCommand: |
       echo "=== Current working directory ==="
       pwd
